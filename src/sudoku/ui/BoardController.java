@@ -1,9 +1,12 @@
 package sudoku.ui;
 
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import sudoku.backend.Game;
+import sudoku.constants.Messages;
 import sudoku.constants.Status;
 
 public class BoardController implements EventHandler<KeyEvent> {
@@ -61,10 +64,19 @@ public class BoardController implements EventHandler<KeyEvent> {
             case UNCHANGED: return;
             case ACTIVE: //todo remove if any conflicts
                 break;
-            case WIN: //todo show dialog of game win
+            case WIN: showDialog(Messages.GAME_WIN);
                 break;
-            case CONFLICTS: //todo: check for conflicts and mark them
+//            case CONFLICTS: showDialog(Messages.CONFLICTS);
+//                //aisa nahi karna chahiye lekin kya kare
+//                if(value>0)
+//                    board.boardCells[x][y].setText(String.valueOf(value));
+//                break;
         }
+    }
+
+    public void showDialog(String message) {
+        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.OK);
+        dialog.showAndWait();
     }
 
 }

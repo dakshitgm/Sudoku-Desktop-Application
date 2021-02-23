@@ -2,16 +2,15 @@ package sudoku.backend;
 
 import sudoku.constants.Status;
 
-import java.util.ArrayList;
 
 public class Game{
 
-    private int length;
-    private int level;
-    private int lengthRoot;
-    private int emptySpaces, emptySpacesRemaining;
+    private final int length;
+    private final int lengthRoot;
+    private final int emptySpaces;
+    private int emptySpacesRemaining;
     private int[][] solved, unSolved;
-    private boolean[][] isMutable;
+    private final boolean[][] isMutable;
 
 
 
@@ -65,14 +64,16 @@ public class Game{
 
     public Status changeCell(int value, int x, int y){
         if(!isMutable[x][y]) return Status.UNCHANGED;
+        Status current = Status.ACTIVE;
         if(unSolved[x][y]==0 && value>0){
             emptySpacesRemaining--;
         } else if(value == 0 && unSolved[x][y]>0){
             emptySpacesRemaining++;
         }
-        unSolved[x][y] = value;
+        if(value!=0 && !gameValidator.checkIfSafe(x,y, value, unSolved))
+            current = Status.CONFLICTS;
 
-        //todo: check for conflicts
+        unSolved[x][y] = value;
 
         if(emptySpacesRemaining == 0){
             if(gameValidator.checkIfValid(unSolved)){
@@ -82,7 +83,7 @@ public class Game{
             }
         }
 
-        return Status.ACTIVE;
+        return current;
     }
 
 
